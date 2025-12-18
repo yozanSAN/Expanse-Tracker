@@ -1,9 +1,13 @@
-import { Routes, Route, Link } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 
 export default function App() {
   return (
     <div>
-      hello world
+      <Routes> 
+               <Route path="/" element={<Home/>}/>
+               <Route path="/signup" element={<Register/>}/>
+               <Route path="/login" element={<Login/>}/>
+            </Routes>  
     </div>
   )
 }
