@@ -1,13 +1,15 @@
 import { Routes, Route } from "react-router-dom";
-
+import Auth from "./page/auth/auth";
+import Dashboard from "./page/dashboard/dashboard";
+import Navbar from "./components/Navbar";
 export default function App() {
   return (
     <div>
-      <Routes> 
-               <Route path="/" element={<Home/>}/>
-               <Route path="/signup" element={<Register/>}/>
-               <Route path="/login" element={<Login/>}/>
-            </Routes>  
+      <Navbar/>
+      <Routes>
+        <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/" element={<Auth />} />
+      </Routes>
     </div>
   )
-}
+};
