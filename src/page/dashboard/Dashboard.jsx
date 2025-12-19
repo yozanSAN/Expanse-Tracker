@@ -120,7 +120,7 @@ export default function Dashboard() {
           </div>
 
           <div className='flex flex-col justify-between items-center text-gray-300 '>
-            <div className='flex justify-between items-center gap-20'>
+            <div className='flex justify-between items-center gap-24'>
               <p>others</p>
               <p>13%</p>
             </div>

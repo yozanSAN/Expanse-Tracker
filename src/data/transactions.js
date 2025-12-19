@@ -1,0 +1,58 @@
+// src/data/transactions.js
+
+export const transactions = [
+  {
+    id: "tx1",
+    title: "Starbucks Coffee",
+    amount: -5.4,
+    category: "Food & Dining",
+    icon: "coffee",
+    date: "2023-10-21",
+    type: "expense",
+  },
+  {
+    id: "tx2",
+    title: "Upwork Earnings",
+    amount: 850,
+    category: "Freelance",
+    icon: "briefcase",
+    date: "2023-10-22",
+    type: "income",
+  },
+  {
+    id: "tx3",
+    title: "Apple Store",
+    amount: -1299,
+    category: "Electronics",
+    icon: "shopping-bag",
+    date: "2023-10-24",
+    type: "expense",
+  },
+  {
+    id: "tx4",
+    title: "Netflix Subscription",
+    amount: -15.99,
+    category: "Entertainment",
+    icon: "tv",
+    date: "2023-10-21",
+    type: "expense",
+  },
+  {
+    id: "tx5",
+    title: "Uber Ride",
+    amount: -24.5,
+    category: "Transport",
+    icon: "car",
+    date: "2023-10-20",
+    type: "expense",
+  },
+  {
+    id: "tx6",
+    title: "Water Bill",
+    amount: -45,
+    category: "Utilities",
+    icon: "droplet",
+    date: "2023-10-18",
+    type: "expense",
+  },
+];
