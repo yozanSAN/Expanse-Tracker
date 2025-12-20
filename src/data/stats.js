@@ -3,7 +3,7 @@
 export const stats = {
   totalBalance: {
     amount: 12450,
-    change: 2.5,
+    change: +2.5,
     trend: "up",
   },
   totalIncome: {
@@ -13,7 +13,7 @@ export const stats = {
   },
   totalExpenses: {
     amount: 1800,
-    change: 0.5,
+    change: +0.5,
     trend: "up",
   },
 };

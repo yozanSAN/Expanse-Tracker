@@ -4,15 +4,25 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: [
-          "-apple-system",
-          "BlinkMacSystemFont",
-          '"Segoe UI"',
-          "Roboto",
-          '"Helvetica Neue"',
-          "Arial",
-          "sans-serif",
-        ],
+        sans: ["Inter", "system-ui", "sans-serif"],
+      },
+      colors: {
+        primary: "#0b1f17", // app backgroun 
+        secondary: "#14352b", 
+
+        textPrimary: "#e5f5ec",
+        textSecondary: "#9fbdb0",
+        textMuted: "#6b8f7f",
+
+        accent: {
+          DEFAULT: "#22c55e",
+          soft: "#16a34a",
+        },
+
+        success: "#22c55e",
+        danger: "#ef4444",
+        warning: "#f97316",
+        info: "#3b82f6",
       },
     },
   },

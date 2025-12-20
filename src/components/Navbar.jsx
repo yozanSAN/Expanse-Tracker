@@ -3,12 +3,12 @@ import expenseTrackerLogo from '../assets/expenses.png';
 
 export default function Navbar() {
   return (
-    <nav className='bg-gradient-to-t from-emerald-500 to-emerald-700 flex justify-between items-center px-6 py-4'>
+    <nav className='bg-gradient-to-t from-secondary to-secondary flex justify-around items-center py-4 gap-20 '>
         <div>
-            <p className='font-bold text-2xl text-white'>ExpenseTracker</p>
+            <p className='font-bold text-2xl text-textPrimary'>ExpenseTracker</p>
         </div>
         <div>
-            <img src={expenseTrackerLogo} className='w-10 h-19 rounded bg-emerald-500' />
+            <img src={expenseTrackerLogo} className='w-10 h-19 rounded bg-accent' />
         </div>
     </nav>
   )
