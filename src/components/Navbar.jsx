@@ -5,6 +5,7 @@ import { auth } from '../config/firebase-config';
 import userDefaultPhoto from '../assets/default-avatar.png'
 export default function Navbar() {
   const [user, setUser] = useState(null);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
@@ -15,7 +16,7 @@ export default function Navbar() {
   return (
     <nav className='bg-gradient-to-t from-secondary to-secondary  py-4 gap-20 '>
       {
-        user ? (
+        user && user.uid ? (
           <div className='flex justify-around items-center  gap-20 '>
             <section className='flex justify-between items-center gap-3'>
               <img src={expenseTrackerLogo} className='w-10 h-19 rounded bg-accent' />

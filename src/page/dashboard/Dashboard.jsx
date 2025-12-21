@@ -3,10 +3,9 @@ import increasingLogo from '../../assets/increasing.png';
 import incomeLogo from '../../assets/incomeLogo.png';
 import decreasingLogo from '../../assets/decreasingLogo.png';
 import expensesLogo from '../../assets/expensesLogo.png';
-// import coffeStarBucksIcon from '../../assets/coffeStarbucksIcon.png'
 
 //DUMMY DATA IMPORTS
-// import { categories } from './../../data/categories';
+import { categories } from './../../data/categories';
 import { transactions } from './../../data/transactions';
 import { stats } from '../../data/stats';
 
@@ -14,7 +13,7 @@ import { stats } from '../../data/stats';
 export default function Dashboard() {
   return (
     <div className='bg-primary h-screen'>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-full ml-44 my-5 ">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-stretch gap-4 max-w-full ml-44 my-5 ">
 
         <div className='flex flex-col justify-between items-center rounded-lg border-none px-6 py-5 gap-4 my-5 bg-secondary'>
           <div className='flex justify-start items-center gap-2'>
@@ -71,7 +70,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div class="col-span-2 bg-secondary flex flex-col gap-44 p-3 rounded-xl">
+        <div class="col-span-2 bg-secondary flex flex-col justify-between p-3 rounded-xl">
           <div className='flex justify-between items-center'>
             <div className='flex flex-col justify-between items-center'>
               <p className='text-textPrimary text-2xl font-bold'>Spndign Analytics</p>
@@ -83,7 +82,7 @@ export default function Dashboard() {
               <button className='bg-primary px-5 py-1 text-textPrimary font-bold rounded-2xl hover:text-primary hover:bg-accent'>Year</button>
             </div>
           </div>
-          <div className='flex justify-evenly items-center text-textMuted font-bold '>
+          <div className='flex justify-between  items-center text-textMuted font-bold '>
             <span className='hover:text-textPrimary active:text-textPrimary'>Mon</span>
             <span className='hover:text-textPrimary active:text-textPrimary'>Tue</span>
             <span className='hover:text-textPrimary active:text-textPrimary'>Wed</span>
@@ -94,52 +93,32 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div class="col-span-1 bg-secondary flex flex-col justify-evenly items-center rounded-xl">
+        {/* TOP CATEGORIES */}
+
+        <div className="col-span-1 bg-secondary flex flex-col justify-start p-6 rounded-xl gap-6">
           <div>
             <p className='text-2xl text-textPrimary font-bold'>Top Categories</p>
-          </div>
-
-          <div className='flex flex-col justify-between items-center text-textSecondary'>
-            <div className='flex justify-between items-center gap-20'>
-              <p>Food & Dining</p>
-              <p>43%</p>
-            </div>
-            <div>
-              prgress bar
-            </div>
-          </div>
-
-          <div className='flex flex-col justify-between items-center text-textSecondary'>
-            <div className='flex justify-between items-center gap-20'>
-              <p>Shopping</p>
-              <p>23%</p>
-            </div>
-            <div>
-              prgress bar
-            </div>
-          </div>
-
-          <div className='flex flex-col justify-between items-center text-textSecondary '>
-            <div className='flex justify-between items-center gap-20'>
-              <p>Transport</p>
-              <p>18%</p>
-            </div>
-            <div>
-              prgress bar
-            </div>
-          </div>
-
-          <div className='flex flex-col justify-between items-center text-textSecondary '>
-            <div className='flex justify-between items-center gap-24'>
-              <p>others</p>
-              <p>13%</p>
-            </div>
-            <div>
-              prgress bar
-            </div>
+            {
+              categories.length > 0 ? categories.map(cat => (
+                <div className='flex flex-col gap-2 w-full' key={cat.name}>
+                  <div className='flex justify-between items-center w-full'>
+                    <p className='text-textSecondary'>{cat.name}</p>
+                    <p className='text-textSecondary'>{cat.percentage}%</p>
+                  </div>
+                  <div className='w-full bg-primary rounded-full h-2'>
+                    <div className={"h-2 rounded-full"} style={{
+                      width: `${cat.percentage}%`,
+                      backgroundColor: cat.color
+                    }}></div>
+                  </div>
+                </div>
+              ))
+                :
+                <h1 className='text-2xl text-info text-center'>NO CATEGORIES FOUND</h1>
+            }
           </div>
         </div>
-
+        {/* --------------------------------------------------- */}
       </div>
 
       <div className='text-textPrimary flex justify-around items-center'>
@@ -161,18 +140,19 @@ export default function Dashboard() {
           </select>
         </div>
       </div>
+
       {/* RECENT TRANSACTIONS GRID*/}
 
-
-      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3  gap-7 max-w-full ml-44 my-5'>
+      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3      lg:grid-cols-3 items-stretch
+      gap-7  mx-auto max-w-7xl my-5'>
 
         {
           Array.isArray(transactions) && transactions.length > 0 ? (
             transactions.map(transaction =>
-              <div className='flex justify-evenly items-center bg-secondary text-textPrimary rounded-lg border-none px-6 py-5 gap-4 my-2 '>
+              <div key={transaction.id} className='flex justify-evenly items-center bg-secondary text-textPrimary rounded-lg border-none py-5 px-4 h-full gap-2'>
 
                 <div >
-                  <img src={transaction.icon} className='rounded-md max-w-7' />
+                  <p >{transaction.icon}</p>
                 </div>
                 <div >
                   <p className='text-md  font-bold mb-3'>{transaction.title}</p>
@@ -184,7 +164,6 @@ export default function Dashboard() {
                 </div>
               </div>
             )
-
           )
             :
             (

@@ -4,7 +4,7 @@ import Dashboard from "./page/dashboard/dashboard";
 import Navbar from "./components/Navbar";
 export default function App() {
   return (
-    <div>
+    <div className="font-sans">
       <Navbar/>
       <Routes>
         <Route path="/Dashboard" element={<Dashboard />} />
