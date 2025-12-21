@@ -3,6 +3,7 @@ import expenseTrackerLogo from '../assets/expenses.png';
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from '../config/firebase-config';
 import userDefaultPhoto from '../assets/default-avatar.png'
+import { Link } from 'react-router-dom';
 export default function Navbar() {
   const [user, setUser] = useState(null);
 
@@ -22,7 +23,14 @@ export default function Navbar() {
               <img src={expenseTrackerLogo} className='w-10 h-19 rounded bg-accent' />
               <p className='font-bold text-2xl text-textPrimary'>ExpenseTracker</p>
             </section>
-            <img src={user.photoURL || userDefaultPhoto} className='w-10 h-19 rounded-full' />
+            <Link to = 'UserProfile'>
+              <button className='flex justify-between items-center gap-3 bg-primary rounded-3xl px-3 py-1 shadow-secondary-sm  hover:bg-tertiary hover:shadow-tertiary-md' >
+                <img src={user.photoURL || userDefaultPhoto} className='w-10 h-19 rounded-full' />
+                <p className='text-textPrimary
+                 text-xl font-bold
+              '>{user.displayName}</p>
+              </button>
+            </Link>
           </div>
         )
           :

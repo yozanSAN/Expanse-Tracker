@@ -7,8 +7,9 @@ export default {
         sans: ["Inter", "system-ui", "sans-serif"],
       },
       colors: {
-        primary: "#0b1f17", // app backgroun 
+        primary: "#0b1f17",
         secondary: "#14352b", 
+        tertiary :"#1f5c47",
 
         textPrimary: "#e5f5ec",
         textSecondary: "#9fbdb0",

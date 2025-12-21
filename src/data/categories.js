@@ -1,24 +1,45 @@
-// src/data/categories.js
-
-export const categories = [
+// Add these to your categories array
+export const CATEGORIES = [
   {
-    name: "Food & Dining",
-    percentage: 45,
-    color: "#22c55e",
+    id: "cat_1",
+    name: "Salary",
+    type: "income",
+    icon: "wallet",
+    color: "#4CAF50",
   },
   {
-    name: "Shopping",
-    percentage: 24,
-    color: "#3b82f6",
+    id: "cat_2",
+    name: "Freelance",
+    type: "income",
+    icon: "laptop",
+    color: "#8BC34A",
   },
   {
-    name: "Transport",
-    percentage: 18,
-    color: "#f97316",
+    id: "cat_3",
+    name: "Rent",
+    type: "expense",
+    icon: "home",
+    color: "#F44336",
   },
   {
-    name: "Others",
-    percentage: 13,
-    color: "#9ca3af",
+    id: "cat_4",
+    name: "Groceries",
+    type: "expense",
+    icon: "shopping-cart",
+    color: "#FF9800",
+  },
+  {
+    id: "cat_5",
+    name: "Dining Out",
+    type: "expense",
+    icon: "utensils",
+    color: "#E91E63",
+  },
+  {
+    id: "cat_6",
+    name: "Entertainment",
+    type: "expense",
+    icon: "play",
+    color: "#9C27B0",
   },
 ];
