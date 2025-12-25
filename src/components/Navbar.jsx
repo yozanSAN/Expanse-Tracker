@@ -19,9 +19,11 @@ export default function Navbar() {
       {
         user && user.uid ? (
           <div className='flex justify-around items-center  gap-20 '>
-            <section className='flex justify-between items-center gap-3'>
-              <img src={expenseTrackerLogo} className='w-10 h-19 rounded bg-accent' />
-              <p className='font-bold text-2xl text-textPrimary'>ExpenseTracker</p>
+            <section>
+              <Link to='Dashboard' className='flex justify-between items-center gap-3' >
+                <img src={expenseTrackerLogo} className='w-10 h-19 rounded bg-accent'  alt='expenseTracker' />
+                <p className='font-bold text-2xl text-textPrimary'>ExpenseTracker</p>
+              </Link>
             </section>
             <Link to = 'UserProfile'>
               <button className='flex justify-between items-center gap-3 bg-primary rounded-3xl px-3 py-1 shadow-secondary-sm  hover:bg-tertiary hover:shadow-tertiary-md' >
