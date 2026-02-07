@@ -1,5 +1,5 @@
 // Add these to your categories array
-export const CATEGORIES = [
+export const categories = [
   {
     id: "cat_1",
     name: "Salary",

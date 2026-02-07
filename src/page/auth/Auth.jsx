@@ -29,7 +29,7 @@ const Auth = () => {
     return (
         <div className='bg-gradient-to-t from-secondary to-accent '>
             {!user && (
-                <div class="flex items-center justify-center h-screen">
+                <div className="flex items-center justify-center h-screen">
                     <button className='center px-6 py-5 text-3xl font-bold rounded bg-accent-soft m-10 hover:bg-accent text-textPrimary shadow-[0_0_10px_#22c55e,0_0_30px_#22c55e,0_0_40px_#22c55e] '
                         onClick={() => handleLogin()}>
                         Sign up with google

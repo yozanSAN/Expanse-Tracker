@@ -1,35 +1,64 @@
-import totalbaalnce from '../../assets/totalBalance.png';
+import { useState, useEffect } from 'react';
+import totalbaalnceIcon from '../../assets/totalBalance.png';
 import increasingLogo from '../../assets/increasing.png';
 import incomeLogo from '../../assets/incomeLogo.png';
 import decreasingLogo from '../../assets/decreasingLogo.png';
 import expensesLogo from '../../assets/expensesLogo.png';
 
-//DUMMY DATA IMPORTS
-import { categories } from './../../data/categories';
-import { transactions } from './../../data/transactions';
-import { stats } from '../../data/stats';
-
+// Hooks and utilities
+import { useExpenseData } from '../../hooks/useExpenseData.js';
+import { getTotals } from '../../utils/helper.js';
 
 export default function Dashboard() {
+  const { transactions, categories, loading, error } = useExpenseData();
+  const [income, setIncome] = useState(0);
+  const [expense, setExpense] = useState(0);
+  const [balance, setBalance] = useState(0);
+
+  useEffect(() => {
+    if (transactions.length > 0 && categories.length > 0) {
+      const { income: inc, expense: exp, balance: bal } = getTotals(transactions, categories);
+      setIncome(inc);
+      setExpense(exp);
+      setBalance(bal);
+    }
+  }, [transactions, categories]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-primary">
+        <p className="text-textPrimary text-2xl">Loading your dashboard...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-primary">
+        <p className="text-danger text-2xl">Error: {error}</p>
+      </div>
+    );
+  }
+
   return (
     <div className='bg-primary h-screen'>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-stretch gap-4 max-w-full ml-44 my-5 ">
 
         <div className='flex flex-col justify-between items-center rounded-lg border-none px-6 py-5 gap-4 my-5 bg-secondary'>
           <div className='flex justify-start items-center gap-2'>
-            <img src={totalbaalnce} className='w-7 h-8' />
+            <img src={totalbaalnceIcon} className='w-7 h-8' />
             <p className='text-textSecondary text-xl'>Total Balance</p>
           </div>
           <div className='flex justify-start items-center'>
-            <p className='font-bold text-3xl text-textPrimary'>{stats.totalBalance.amount}
+            <p className='font-bold text-3xl text-textPrimary'>{balance}
             </p>
           </div>
           <div className='flex justify-start items-center gap-2'>
             {
-              stats?.totalBalance?.trend === 'up' ? (<img src={increasingLogo} className='w-7 h-8' />) : (<img src={decreasingLogo} className='w-7 h-8' />)
+              balance >= 0 ? (<img src={increasingLogo} className='w-7 h-8' />) : (<img src={decreasingLogo} className='w-7 h-8' />)
             }
 
-            <p className='text-success font-bold text-xl'>{stats.totalBalance.change}% </p>
+            <p className='text-success font-bold text-xl'>+2% </p>
             <p className='text-textSecondary text-xl '>vs last month</p>
           </div>
         </div>
@@ -40,14 +69,14 @@ export default function Dashboard() {
             <p className='text-textSecondary text-xl'>Total Income</p>
           </div>
           <div className='flex justify-start items-center'>
-            <p className='font-bold text-3xl text-textPrimary'>{stats.totalIncome.amount}
+            <p className='font-bold text-3xl text-textPrimary'>{income}
             </p>
           </div>
           <div className='flex justify-start items-center gap-2'>
             {
-              stats?.totalIncome?.trend === 'up' ? (<img src={increasingLogo} className='w-7 h-8' />) : (<img src={decreasingLogo} className='w-7 h-8' />)
+              income > 0 ? (<img src={increasingLogo} className='w-7 h-8' />) : (<img src={decreasingLogo} className='w-7 h-8' />)
             }
-            <p className='text-danger font-bold text-xl'>{stats.totalIncome.change}% </p>
+            <p className='text-danger font-bold text-xl'>+5% </p>
             <p className='text-textSecondary text-xl '>vs last month</p>
           </div>
         </div>
@@ -58,22 +87,22 @@ export default function Dashboard() {
             <p className='text-textSecondary text-xl'>Total Expenses</p>
           </div>
           <div className='flex justify-start items-center'>
-            <p className='font-bold text-3xl text-textPrimary'>{stats.totalExpenses.amount}
+            <p className='font-bold text-3xl text-textPrimary'>{expense}
             </p>
           </div>
           <div className='flex justify-start items-center gap-2'>
             {
-              stats?.totalExpenses?.trend === 'up' ? (<img src={increasingLogo} className='w-7 h-8' />) : (<img src={decreasingLogo} className='w-7 h-8' />)
+              expense > 0 ? (<img src={increasingLogo} className='w-7 h-8' />) : (<img src={decreasingLogo} className='w-7 h-8' />)
             }
-            <p className='text-success font-bold text-xl'>{stats.totalExpenses.change}% </p>
+            <p className='text-success font-bold text-xl'>+3% </p>
             <p className='text-textSecondary text-xl '>vs last month</p>
           </div>
         </div>
 
-        <div class="col-span-2 bg-secondary flex flex-col justify-between p-3 rounded-xl">
+        <div className="col-span-2 bg-secondary flex flex-col justify-between p-3 rounded-xl">
           <div className='flex justify-between items-center'>
             <div className='flex flex-col justify-between items-center'>
-              <p className='text-textPrimary text-2xl font-bold'>Spndign Analytics</p>
+              <p className='text-textPrimary text-2xl font-bold'>Spending Analytics</p>
               <p className='text-textSecondary text-md'>Monthly breakdown of expenses</p>
             </div>
             <div className='flex justify-evenly items-center gap-2'>

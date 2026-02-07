@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { auth } from '../../config/firebase-config.js';
 import { onAuthStateChanged, signOut, updateProfile } from "firebase/auth";
 import { Link } from 'react-router-dom';
+import userDefaultPhoto from '../../assets/default-avatar.png';
 import {
-    User, Mail, Shield, Bell, Lock,
-    Settings, Camera, LogOut, ChevronRight,
-    CreditCard, Globe, Zap, Loader2
+    User, Mail,
+    Settings, Camera, LogOut, ChevronRight, Loader2
 } from 'lucide-react';
 
 const ProfilePage = () => {
@@ -24,7 +24,7 @@ const ProfilePage = () => {
             if (user) {
                 setCurrentUser(user);
                 setDisplayName(user.displayName || "");
-                setPhotoURL(user.photoURL || "");
+                setPhotoURL(user.photoURL || userDefaultPhoto);
             } else {
                 setCurrentUser(null);
                 // Redirect to login logic could go here

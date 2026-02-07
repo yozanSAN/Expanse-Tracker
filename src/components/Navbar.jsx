@@ -5,44 +5,44 @@ import { auth } from '../config/firebase-config';
 import userDefaultPhoto from '../assets/default-avatar.png'
 import { Link } from 'react-router-dom';
 export default function Navbar() {
-  const [user, setUser] = useState(null);
+    const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      setUser(currentUser);
-    });
-    return () => unsubscribe();
-  }, []);
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            setUser(currentUser);
+        });
+        return () => unsubscribe();
+    }, []);
 
-  return (
-    <nav className='bg-gradient-to-t from-secondary to-secondary  py-4 gap-20 '>
-      {
-        user && user.uid ? (
-          <div className='flex justify-around items-center  gap-20 '>
-            <section>
-              <Link to='Dashboard' className='flex justify-between items-center gap-3' >
-                <img src={expenseTrackerLogo} className='w-10 h-19 rounded bg-accent'  alt='expenseTracker' />
-                <p className='font-bold text-2xl text-textPrimary'>ExpenseTracker</p>
-              </Link>
-            </section>
-            <Link to = 'UserProfile'>
-              <button className='flex justify-between items-center gap-3 bg-primary rounded-3xl px-3 py-1 shadow-secondary-sm  hover:bg-tertiary hover:shadow-tertiary-md' >
-                <img src={user.photoURL || userDefaultPhoto} className='w-10 h-19 rounded-full' />
-                <p className='text-textPrimary
+    return (
+        <nav className='bg-gradient-to-t from-secondary to-secondary  py-4 gap-20 '>
+            {
+                user && user.uid ? (
+                        <div className='flex justify-around items-center  gap-20 '>
+                            <section>
+                                <Link to='Dashboard' className='flex justify-between items-center gap-3' >
+                                    <img src={expenseTrackerLogo} className='w-10 h-19 rounded bg-accent'  alt='expenseTracker' />
+                                    <p className='font-bold text-2xl text-textPrimary'>ExpenseTracker</p>
+                                </Link>
+                            </section>
+                            <Link to = 'UserProfile'>
+                                <button className='flex justify-between items-center gap-3 bg-primary rounded-3xl px-3 py-1 shadow-secondary-sm  hover:bg-tertiary hover:shadow-tertiary-md' >
+                                    <img src={user.photoURL || userDefaultPhoto} className='w-10 h-19 rounded-full' />
+                                    <p className='text-textPrimary
                  text-xl font-bold
               '>{user.displayName}</p>
-              </button>
-            </Link>
-          </div>
-        )
-          :
-          (
-            <div className='flex justify-around items-center'>
-              <p className='font-bold text-2xl text-textPrimary'>ExpenseTracker</p>
-              <img src={expenseTrackerLogo} className='w-10 h-19 rounded bg-accent' />
-            </div>
-          )
-      }
-    </nav>
-  )
+                                </button>
+                            </Link>
+                        </div>
+                    )
+                    :
+                    (
+                        <div className='flex justify-around items-center'>
+                            <p className='font-bold text-2xl text-textPrimary'>ExpenseTracker</p>
+                            <img src={expenseTrackerLogo} className='w-10 h-19 rounded bg-accent' />
+                        </div>
+                    )
+            }
+        </nav>
+    )
 };
