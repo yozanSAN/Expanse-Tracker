@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import totalbaalnceIcon from '../../assets/totalBalance.png';
 import increasingLogo from '../../assets/increasing.png';
 import incomeLogo from '../../assets/incomeLogo.png';
@@ -11,18 +10,12 @@ import { getTotals } from '../../utils/helper.js';
 
 export default function Dashboard() {
   const { transactions, categories, loading, error } = useExpenseData();
-  const [income, setIncome] = useState(0);
-  const [expense, setExpense] = useState(0);
-  const [balance, setBalance] = useState(0);
 
-  useEffect(() => {
-    if (transactions.length > 0 && categories.length > 0) {
-      const { income: inc, expense: exp, balance: bal } = getTotals(transactions, categories);
-      setIncome(inc);
-      setExpense(exp);
-      setBalance(bal);
-    }
-  }, [transactions, categories]);
+  // Compute totals directly without state to avoid cascading renders
+  const { income = 0, expense = 0, balance = 0 } = 
+    transactions.length > 0 && categories.length > 0
+      ? getTotals(transactions, categories)
+      : { income: 0, expense: 0, balance: 0 };
 
   if (loading) {
     return (

@@ -1,12 +1,27 @@
 import { useState, useEffect } from 'react';
-import { signInWithPopup } from 'firebase/auth';
+import { signInWithPopup, onAuthStateChanged } from 'firebase/auth';
 import { auth, provider } from '../../config/firebase-config.js';
 import { useNavigate  } from 'react-router-dom';
 
 const Auth = () => {
 
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+
+    // Check if user is already logged in on component mount
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+            if (currentUser) {
+                // User is already logged in, redirect to Dashboard
+                navigate("/Dashboard");
+            } else {
+                // No user logged in, show Auth page
+                setLoading(false);
+            }
+        });
+        return () => unsubscribe();
+    }, [navigate]);
 
     const handleLogin = () => {
         signInWithPopup(auth, provider)
@@ -22,9 +37,13 @@ const Auth = () => {
     //     auth.signOut();
     // }
 
-    useEffect(() => {
-        console.log(user)
-    }, [user])
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-screen bg-gradient-to-t from-secondary to-accent">
+                <p className="text-textPrimary text-2xl">Loading...</p>
+            </div>
+        );
+    }
 
     return (
         <div className='bg-gradient-to-t from-secondary to-accent '>
