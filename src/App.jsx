@@ -1,17 +1,33 @@
 import { Routes, Route } from "react-router-dom";
-import Auth from "./page/auth/auth";
-import Dashboard from "./page/dashboard/dashboard";
+import Auth from "./page/auth/Auth";
+import Dashboard from "./page/dashboard/Dashboard";
 import Navbar from "./components/Navbar";
 import UserProfile from "./page/profile/UserProfile";
+import PrivateRoute from "./components/PrivateRoute";
+
 export default function App() {
   return (
     <div className="font-sans">
-      <Navbar/>
+      <Navbar />
       <Routes>
-        <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/" element={<Auth />} />
-        <Route path="/UserProfile" element={<UserProfile />} />
+        <Route
+          path="/Dashboard"
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/UserProfile"
+          element={
+            <PrivateRoute>
+              <UserProfile />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </div>
-  )
-};
+  );
+}
