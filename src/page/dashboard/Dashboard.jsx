@@ -3,6 +3,9 @@ import increasingLogo from '../../assets/increasing.png';
 import incomeLogo from '../../assets/incomeLogo.png';
 import decreasingLogo from '../../assets/decreasingLogo.png';
 import expensesLogo from '../../assets/expensesLogo.png';
+import { useState } from 'react';
+import { Plus } from 'lucide-react';
+import AddTransactionModal from '../../components/AddTransactionModal';
 
 // Hooks and utilities
 import { useExpenseData } from '../../hooks/useExpenseData.js';
@@ -10,9 +13,10 @@ import { getTotals } from '../../utils/helper.js';
 
 export default function Dashboard() {
   const { transactions, categories, loading, error } = useExpenseData();
+  const [showModal, setShowModal] = useState(false);
 
   // Compute totals directly without state to avoid cascading renders
-  const { income = 0, expense = 0, balance = 0 } = 
+  const { income = 0, expense = 0, balance = 0 } =
     transactions.length > 0 && categories.length > 0
       ? getTotals(transactions, categories)
       : { income: 0, expense: 0, balance: 0 };
@@ -140,12 +144,18 @@ export default function Dashboard() {
             }
           </div>
         </div>
-        {/* --------------------------------------------------- */}
       </div>
-
+      {/* --------------------------------------------------- */}
       <div className='text-textPrimary flex justify-around items-center'>
-        <div>
+        <div className='flex items-center gap-4'>
           <p className='text-xl font-bold'>Recent Transactions</p>
+          <button
+            onClick={() => setShowModal(true)}
+            className='flex items-center gap-2 bg-accent hover:bg-accent-soft text-primary font-bold px-4 py-2 rounded-xl transition-colors'
+          >
+            <Plus size={18} />
+            Add
+          </button>
         </div>
         <div className='flex justify-between items-center gap-4'>
           <select className='bg-secondary px-3 py-2 rounded-xl'>
@@ -153,7 +163,7 @@ export default function Dashboard() {
             <option value="This Week">This Week</option>
             <option value="This Year">This Year</option>
           </select>
-          <select className='bg-secondary  px-3 py-2 rounded-xl'>
+          <select className='bg-secondary px-3 py-2 rounded-xl'>
             <option value="All categories">All categories</option>
             <option value="Food & Dinning">Food & Dinning</option>
             <option value="Shopping">Shopping</option>
@@ -163,6 +173,13 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {showModal && (
+        <AddTransactionModal
+          categories={categories}
+          onClose={() => setShowModal(false)}
+          onSuccess={() => window.location.reload()}
+        />
+      )}
       {/* RECENT TRANSACTIONS GRID*/}
 
       <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3      lg:grid-cols-3 items-stretch
