@@ -38,11 +38,11 @@ export default function Dashboard() {
   return (
     <div className="bg-primary min-h-screen px-6 py-5 max-w-7xl mx-auto">
 
-      {/* STAT CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-stretch gap-4 mb-6">
+      {/* ROW 1 — STAT CARDS */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
 
         <div className="flex flex-col justify-between items-center rounded-lg px-6 py-5 gap-4 bg-secondary">
-          <div className="flex justify-start items-center gap-2">
+          <div className="flex items-center gap-2">
             <img src={totalbaalnceIcon} className="w-7 h-8" />
             <p className="text-textSecondary text-xl">Total Balance</p>
           </div>
@@ -57,7 +57,7 @@ export default function Dashboard() {
         </div>
 
         <div className="flex flex-col justify-between items-center rounded-lg px-6 py-5 gap-4 bg-secondary">
-          <div className="flex justify-start items-center gap-2">
+          <div className="flex items-center gap-2">
             <img src={incomeLogo} className="w-7 h-8" />
             <p className="text-textSecondary text-xl">Total Income</p>
           </div>
@@ -72,7 +72,7 @@ export default function Dashboard() {
         </div>
 
         <div className="flex flex-col justify-between items-center rounded-lg px-6 py-5 gap-4 bg-secondary">
-          <div className="flex justify-start items-center gap-2">
+          <div className="flex items-center gap-2">
             <img src={expensesLogo} className="w-7 h-8" />
             <p className="text-textSecondary text-xl">Total Expenses</p>
           </div>
@@ -86,11 +86,16 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* CHART */}
-        <SpendingChart transactions={transactions} categories={categories} />
+      </div>
 
-        {/* TOP CATEGORIES */}
-        <div className="col-span-1 bg-secondary flex flex-col p-6 rounded-xl gap-4">
+      {/* ROW 2 — CHART + TOP CATEGORIES */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+
+        <div className="lg:col-span-2">
+          <SpendingChart transactions={transactions} categories={categories} />
+        </div>
+
+        <div className="bg-secondary flex flex-col p-6 rounded-xl gap-4">
           <p className="text-2xl text-textPrimary font-bold">Top Categories</p>
           {categoriesWithPercentage.length > 0 ? (
             categoriesWithPercentage.map((cat) => (
@@ -102,10 +107,7 @@ export default function Dashboard() {
                 <div className="w-full bg-primary rounded-full h-2">
                   <div
                     className="h-2 rounded-full"
-                    style={{
-                      width: `${cat.percentage}%`,
-                      backgroundColor: cat.color,
-                    }}
+                    style={{ width: `${cat.percentage}%`, backgroundColor: cat.color }}
                   />
                 </div>
               </div>
@@ -147,7 +149,7 @@ export default function Dashboard() {
       </div>
 
       {/* RECENT TRANSACTIONS GRID */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {Array.isArray(transactions) && transactions.length > 0 ? (
           transactions.map((transaction) => {
             const cat = categories.find((c) => c.id === transaction.categoryId);
@@ -155,7 +157,7 @@ export default function Dashboard() {
             return (
               <div
                 key={transaction.id}
-                className="flex justify-evenly items-center bg-secondary text-textPrimary rounded-lg py-5 px-4 gap-2"
+                className="flex items-center bg-secondary text-textPrimary rounded-lg py-5 px-4 gap-4"
               >
                 <div
                   className="w-10 h-10 rounded-full flex items-center justify-center text-primary font-bold text-lg flex-shrink-0"
@@ -163,12 +165,12 @@ export default function Dashboard() {
                 >
                   {transaction.title?.charAt(0).toUpperCase()}
                 </div>
-                <div className="flex-1">
-                  <p className="font-bold mb-1">{transaction.title}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="font-bold truncate">{transaction.title}</p>
                   <p className="text-textSecondary text-sm">{cat?.name ?? 'Uncategorized'}</p>
                 </div>
-                <div className="text-right">
-                  <p className={`text-xl font-bold mb-1 ${cat?.type === 'income' ? 'text-success' : 'text-danger'}`}>
+                <div className="text-right flex-shrink-0">
+                  <p className={`text-lg font-bold ${cat?.type === 'income' ? 'text-success' : 'text-danger'}`}>
                     {cat?.type === 'income' ? '+' : '-'}{transaction.amount.toLocaleString()}
                   </p>
                   <p className="text-textMuted text-sm">
@@ -187,10 +189,9 @@ export default function Dashboard() {
         <AddTransactionModal
           categories={categories}
           onClose={() => setShowModal(false)}
-          onSuccess={() => window.location.reload()}
+          onSuccess={() => {}}
         />
       )}
 
     </div>
-  );
-}
+  )};

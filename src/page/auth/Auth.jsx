@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { signInWithPopup, onAuthStateChanged } from 'firebase/auth';
 import { auth, provider, db } from '../../config/firebase-config.js';
 import { useNavigate } from 'react-router-dom';
-import { collection, query, where, getDocs, addDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, addDoc, doc, setDoc, getDoc, Timestamp } from 'firebase/firestore';
 
 const DEFAULT_CATEGORIES = [
   { name: 'Salary',        type: 'income',  icon: 'wallet',        color: '#4CAF50' },
@@ -16,17 +16,36 @@ const DEFAULT_CATEGORIES = [
 ];
 
 const seedCategories = async (userId) => {
-  const q = query(
-    collection(db, 'categories'),
-    where('userId', '==', userId)
-  );
+  const q = query(collection(db, 'categories'), where('userId', '==', userId));
   const snapshot = await getDocs(q);
   if (!snapshot.empty) return;
-
   const writes = DEFAULT_CATEGORIES.map((cat) =>
     addDoc(collection(db, 'categories'), { ...cat, userId })
   );
   await Promise.all(writes);
+};
+
+const createUserDocument = async (firebaseUser) => {
+  const userRef = doc(db, 'users', firebaseUser.uid);
+  const userSnap = await getDoc(userRef);
+
+  // Only create if it doesn't exist yet
+  if (!userSnap.exists()) {
+    const locale = navigator.language || 'en-US';
+    const currency = locale.startsWith('ar') ? 'MAD'
+      : locale.startsWith('fr') ? 'EUR'
+      : 'USD';
+
+    await setDoc(userRef, {
+      uid: firebaseUser.uid,
+      displayName: firebaseUser.displayName || '',
+      email: firebaseUser.email || '',
+      photoURL: firebaseUser.photoURL || '',
+      createdAt: Timestamp.now(),
+      currency,
+      language: locale,
+    });
+  }
 };
 
 const Auth = () => {
@@ -48,7 +67,10 @@ const Auth = () => {
   const handleLogin = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
-      await seedCategories(result.user.uid);
+      await Promise.all([
+        createUserDocument(result.user),
+        seedCategories(result.user.uid),
+      ]);
       setUser(result.user);
       navigate('/Dashboard');
     } catch (error) {
