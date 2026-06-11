@@ -14,10 +14,10 @@ export default function Dashboard() {
   const { transactions, categories, loading, error } = useExpenseData();
   const [showModal, setShowModal] = useState(false);
 
-  const { income = 0, expense = 0, balance = 0 } =
-    transactions.length > 0 && categories.length > 0
-      ? getTotals(transactions, categories)
-      : { income: 0, expense: 0, balance: 0 };
+  const { income = 0, expense = 0, balance = 0, categoriesWithPercentage = [] } =
+  transactions.length > 0 && categories.length > 0
+    ? getTotals(transactions, categories)
+    : { income: 0, expense: 0, balance: 0, categoriesWithPercentage: [] };
 
   if (loading) {
     return (
