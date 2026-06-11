@@ -9,6 +9,8 @@ import AddTransactionModal from '../../components/AddTransactionModal';
 import SpendingChart from '../../components/SpendingChart';
 import { useExpenseData } from '../../hooks/useExpenseData.js';
 import { getTotals } from '../../utils/helper.js';
+import { useUserData } from '../../hooks/useUserData.js';
+import { formatCurrency } from '../../utils/formatCurrency.js';
 
 export default function Dashboard() {
   const { transactions, categories, loading, error } = useExpenseData();
@@ -18,6 +20,9 @@ export default function Dashboard() {
     transactions.length > 0 && categories.length > 0
       ? getTotals(transactions, categories)
       : { income: 0, expense: 0, balance: 0, change: 0, categoriesWithPercentage: [] };
+
+  const { userData } = useUserData();
+  const currency = userData?.currency ?? 'USD';
 
   if (loading) {
     return (
@@ -38,7 +43,7 @@ export default function Dashboard() {
   return (
     <div className="bg-primary min-h-screen px-6 py-5 max-w-7xl mx-auto">
 
-      {/* ROW 1 — STAT CARDS */}
+      {/*STAT CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
 
         <div className="flex flex-col justify-between items-center rounded-lg px-6 py-5 gap-4 bg-secondary">
@@ -46,7 +51,7 @@ export default function Dashboard() {
             <img src={totalbaalnceIcon} className="w-7 h-8" />
             <p className="text-textSecondary text-xl">Total Balance</p>
           </div>
-          <p className="font-bold text-3xl text-textPrimary">{balance.toLocaleString()}</p>
+          <p className="font-bold text-3xl text-textPrimary">{formatCurrency(balance, currency)}</p>
           <div className="flex items-center gap-2">
             <img src={balance >= 0 ? increasingLogo : decreasingLogo} className="w-7 h-8" />
             <p className={`font-bold text-xl ${balance >= 0 ? 'text-success' : 'text-danger'}`}>
@@ -61,7 +66,7 @@ export default function Dashboard() {
             <img src={incomeLogo} className="w-7 h-8" />
             <p className="text-textSecondary text-xl">Total Income</p>
           </div>
-          <p className="font-bold text-3xl text-textPrimary">{income.toLocaleString()}</p>
+          <p className="font-bold text-3xl text-textPrimary">{formatCurrency(income, currency)}</p>
           <div className="flex items-center gap-2">
             <img src={income > 0 ? increasingLogo : decreasingLogo} className="w-7 h-8" />
             <p className={`font-bold text-xl ${income > 0 ? 'text-success' : 'text-danger'}`}>
@@ -76,7 +81,8 @@ export default function Dashboard() {
             <img src={expensesLogo} className="w-7 h-8" />
             <p className="text-textSecondary text-xl">Total Expenses</p>
           </div>
-          <p className="font-bold text-3xl text-textPrimary">{expense.toLocaleString()}</p>
+          <p className="font-bold text-3xl text-textPrimary">{formatCurrency(expense, currency)}</p>
+
           <div className="flex items-center gap-2">
             <img src={expense > 0 ? increasingLogo : decreasingLogo} className="w-7 h-8" />
             <p className={`font-bold text-xl ${expense > 0 ? 'text-danger' : 'text-success'}`}>
@@ -88,7 +94,7 @@ export default function Dashboard() {
 
       </div>
 
-      {/* ROW 2 — CHART + TOP CATEGORIES */}
+      {/*CHART + TOP CATEGORIES */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
 
         <div className="lg:col-span-2">
@@ -189,9 +195,10 @@ export default function Dashboard() {
         <AddTransactionModal
           categories={categories}
           onClose={() => setShowModal(false)}
-          onSuccess={() => {}}
+          onSuccess={() => setShowModal(false)}
         />
       )}
 
     </div>
-  )};
+  )
+};

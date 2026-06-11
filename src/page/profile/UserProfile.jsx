@@ -4,6 +4,9 @@ import { onAuthStateChanged, signOut, updateProfile } from "firebase/auth";
 import { Link } from 'react-router-dom';
 import userDefaultPhoto from '../../assets/default-avatar.png';
 import { useNavigate } from 'react-router-dom';
+import { doc, updateDoc } from 'firebase/firestore';
+import { useUserData } from '../../hooks/useUserData.js';
+import { db } from '../../config/firebase-config.js';
 import {
     User, Mail,
     Settings, Camera, LogOut, ChevronRight, Loader2
@@ -19,34 +22,45 @@ const ProfilePage = () => {
     const [photoURL, setPhotoURL] = useState("");
 
 
+    const { userData } = useUserData();
+    const [currency, setCurrency] = useState(userData?.currency ?? 'USD');
+
     // 1. Listen for Auth State Changes
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setCurrentUser(user);
+
             if (user) {
-                setCurrentUser(user);
-                setDisplayName(user.displayName || "");
-                setPhotoURL(user.photoURL || userDefaultPhoto);
-            } else {
-                setCurrentUser(null);
-                // Redirect to login logic could go here
+                setDisplayName(user.displayName || '');
+                setPhotoURL(user.photoURL || '');
             }
+
             setLoading(false);
         });
 
-        return () => unsubscribe();
+        return unsubscribe;
     }, []);
+    
+    useEffect(() => {
+        setCurrency(userData?.currency ?? 'USD');
+    }, [userData]);
 
-    // 2. Handle Profile Update
     const handleSave = async () => {
         try {
-            await updateProfile(auth.currentUser, {
-                displayName: displayName,
-                // photoURL: photoURL // You can update this once you have a storage URL
-            });
-            alert("Profile updated successfully!");
+            await updateProfile(auth.currentUser, { displayName });
+
+            await updateDoc(
+                doc(db, 'users', auth.currentUser.uid),
+                {
+                    displayName,
+                    currency,
+                }
+            );
+
+            alert('Profile updated successfully!');
         } catch (error) {
-            console.error("Error updating profile:", error);
-            alert("Failed to update profile.");
+            console.error('Error updating profile:', error);
+            alert('Failed to update profile.');
         }
     };
 
@@ -147,7 +161,26 @@ const ProfilePage = () => {
                                 </h2>
 
                                 <div className="space-y-6">
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <div className="space-y-2">
+                                            <label className="text-sm text-textMuted font-medium ml-1">
+                                                Currency
+                                            </label>
+
+                                            <select
+                                                value={currency}
+                                                onChange={(e) => setCurrency(e.target.value)}
+                                                className="w-full bg-primary border border-tertiary rounded-xl px-4 py-3 text-textPrimary focus:outline-none focus:border-accent transition-colors"
+                                            >
+                                                <option value="USD">USD — US Dollar</option>
+                                                <option value="EUR">EUR — Euro</option>
+                                                <option value="MAD">MAD — Moroccan Dirham</option>
+                                                <option value="GBP">GBP — British Pound</option>
+                                                <option value="JPY">JPY — Japanese Yen</option>
+                                                <option value="CAD">CAD — Canadian Dollar</option>
+                                                <option value="AUD">AUD — Australian Dollar</option>
+                                            </select>
+                                        </div>
                                         <div className="space-y-2">
                                             <label className="text-sm text-textMuted font-medium ml-1">Display Name</label>
                                             <input
