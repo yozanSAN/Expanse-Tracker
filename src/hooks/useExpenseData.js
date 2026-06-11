@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { collection, query, where, getDocs } from 'firebase/firestore';
-import { db } from '../config/firebase-config';
-import { auth } from '../config/firebase-config';
+import { collection, query, where, getDocs, onSnapshot } from 'firebase/firestore';
+import { db, auth } from '../config/firebase-config';
+import { onAuthStateChanged } from 'firebase/auth';
 
 export const useExpenseData = () => {
   const [transactions, setTransactions] = useState([]);
@@ -10,59 +10,63 @@ export const useExpenseData = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        
-        const currentUser = auth.currentUser;
-        if (!currentUser) {
-          setTransactions([]);
-          setCategories([]);
-          setLoading(false);
-          return;
-        }
+    let unsubscribeTransactions = null;
+    let unsubscribeCategories = null;
 
-        // Fetch transactions for current user
-        const transactionsQuery = query(
-          collection(db, 'transactions'),
-          where('userId', '==', currentUser.uid)
-        );
-        const transactionsSnapshot = await getDocs(transactionsQuery);
-        const transactionsData = transactionsSnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
+    const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
+      // Clean up any previous Firestore listeners
+      if (unsubscribeTransactions) unsubscribeTransactions();
+      if (unsubscribeCategories) unsubscribeCategories();
 
-        // Fetch categories for current user
-        const categoriesQuery = query(
-          collection(db, 'categories'),
-          where('userId', '==', currentUser.uid)
-        );
-        const categoriesSnapshot = await getDocs(categoriesQuery);
-        const categoriesData = categoriesSnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }));
-
-        setTransactions(transactionsData);
-        setCategories(categoriesData);
-        setError(null);
-      } catch (err) {
-        console.error('Error fetching expense data:', err);
-        setError(err.message);
+      if (!currentUser) {
         setTransactions([]);
         setCategories([]);
-      } finally {
         setLoading(false);
+        return;
       }
-    };
 
-    // Set up auth listener
-    const unsubscribe = auth.onAuthStateChanged(() => {
-      fetchData();
+      setLoading(true);
+
+      // Real-time listener for transactions
+      const transactionsQuery = query(
+        collection(db, 'transactions'),
+        where('userId', '==', currentUser.uid)
+      );
+      unsubscribeTransactions = onSnapshot(
+        transactionsQuery,
+        (snapshot) => {
+          setTransactions(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+          setLoading(false);
+        },
+        (err) => {
+          console.error('Error fetching transactions:', err);
+          setError(err.message);
+          setLoading(false);
+        }
+      );
+
+      // Real-time listener for categories
+      const categoriesQuery = query(
+        collection(db, 'categories'),
+        where('userId', '==', currentUser.uid)
+      );
+      unsubscribeCategories = onSnapshot(
+        categoriesQuery,
+        (snapshot) => {
+          setCategories(snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() })));
+        },
+        (err) => {
+          console.error('Error fetching categories:', err);
+          setError(err.message);
+        }
+      );
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribeAuth();
+      if (unsubscribeTransactions) unsubscribeTransactions();
+      if (unsubscribeCategories) unsubscribeCategories();
+    };
   }, []);
 
   return { transactions, categories, loading, error };
