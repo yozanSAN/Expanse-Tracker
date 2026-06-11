@@ -15,9 +15,9 @@ export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
 
   const { income = 0, expense = 0, balance = 0, categoriesWithPercentage = [] } =
-  transactions.length > 0 && categories.length > 0
-    ? getTotals(transactions, categories)
-    : { income: 0, expense: 0, balance: 0, categoriesWithPercentage: [] };
+    transactions.length > 0 && categories.length > 0
+      ? getTotals(transactions, categories)
+      : { income: 0, expense: 0, balance: 0, categoriesWithPercentage: [] };
 
   if (loading) {
     return (
@@ -86,8 +86,8 @@ export default function Dashboard() {
         {/* TOP CATEGORIES */}
         <div className="col-span-1 bg-secondary flex flex-col p-6 rounded-xl gap-4">
           <p className="text-2xl text-textPrimary font-bold">Top Categories</p>
-          {categories.length > 0 ? (
-            categories.map((cat) => (
+          {categoriesWithPercentage.length > 0 ? (
+            categoriesWithPercentage.map((cat) => (
               <div className="flex flex-col gap-2 w-full" key={cat.id}>
                 <div className="flex justify-between items-center w-full">
                   <p className="text-textSecondary">{cat.name}</p>
