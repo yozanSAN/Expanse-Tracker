@@ -6,8 +6,7 @@ import expensesLogo from '../../assets/expensesLogo.png';
 import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import AddTransactionModal from '../../components/AddTransactionModal';
-
-// Hooks and utilities
+import SpendingChart from '../../components/SpendingChart';
 import { useExpenseData } from '../../hooks/useExpenseData.js';
 import { getTotals } from '../../utils/helper.js';
 
@@ -15,7 +14,6 @@ export default function Dashboard() {
   const { transactions, categories, loading, error } = useExpenseData();
   const [showModal, setShowModal] = useState(false);
 
-  // Compute totals directly without state to avoid cascading renders
   const { income = 0, expense = 0, balance = 0 } =
     transactions.length > 0 && categories.length > 0
       ? getTotals(transactions, categories)
@@ -38,139 +36,143 @@ export default function Dashboard() {
   }
 
   return (
-    <div className='bg-primary h-screen'>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-stretch gap-4 max-w-full ml-44 my-5 ">
+    <div className="bg-primary min-h-screen px-6 py-5 max-w-7xl mx-auto">
 
-        <div className='flex flex-col justify-between items-center rounded-lg border-none px-6 py-5 gap-4 my-5 bg-secondary'>
-          <div className='flex justify-start items-center gap-2'>
-            <img src={totalbaalnceIcon} className='w-7 h-8' />
-            <p className='text-textSecondary text-xl'>Total Balance</p>
-          </div>
-          <div className='flex justify-start items-center'>
-            <p className='font-bold text-3xl text-textPrimary'>{balance}
-            </p>
-          </div>
-          <div className='flex justify-start items-center gap-2'>
-            {
-              balance >= 0 ? (<img src={increasingLogo} className='w-7 h-8' />) : (<img src={decreasingLogo} className='w-7 h-8' />)
-            }
+      {/* STAT CARDS */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 items-stretch gap-4 mb-6">
 
-            <p className='text-success font-bold text-xl'>+2% </p>
-            <p className='text-textSecondary text-xl '>vs last month</p>
+        <div className="flex flex-col justify-between items-center rounded-lg px-6 py-5 gap-4 bg-secondary">
+          <div className="flex justify-start items-center gap-2">
+            <img src={totalbaalnceIcon} className="w-7 h-8" />
+            <p className="text-textSecondary text-xl">Total Balance</p>
+          </div>
+          <p className="font-bold text-3xl text-textPrimary">{balance.toLocaleString()}</p>
+          <div className="flex items-center gap-2">
+            <img src={balance >= 0 ? increasingLogo : decreasingLogo} className="w-7 h-8" />
+            <p className="text-success font-bold text-xl">+2%</p>
+            <p className="text-textSecondary text-xl">vs last month</p>
           </div>
         </div>
 
-        <div className='flex flex-col justify-between items-center rounded-lg border-none px-6 py-5 gap-4 bg-secondary my-5'>
-          <div className='flex justify-start items-center gap-2'>
-            <img src={incomeLogo} className='w-7 h-8' />
-            <p className='text-textSecondary text-xl'>Total Income</p>
+        <div className="flex flex-col justify-between items-center rounded-lg px-6 py-5 gap-4 bg-secondary">
+          <div className="flex justify-start items-center gap-2">
+            <img src={incomeLogo} className="w-7 h-8" />
+            <p className="text-textSecondary text-xl">Total Income</p>
           </div>
-          <div className='flex justify-start items-center'>
-            <p className='font-bold text-3xl text-textPrimary'>{income}
-            </p>
-          </div>
-          <div className='flex justify-start items-center gap-2'>
-            {
-              income > 0 ? (<img src={increasingLogo} className='w-7 h-8' />) : (<img src={decreasingLogo} className='w-7 h-8' />)
-            }
-            <p className='text-danger font-bold text-xl'>+5% </p>
-            <p className='text-textSecondary text-xl '>vs last month</p>
+          <p className="font-bold text-3xl text-textPrimary">{income.toLocaleString()}</p>
+          <div className="flex items-center gap-2">
+            <img src={income > 0 ? increasingLogo : decreasingLogo} className="w-7 h-8" />
+            <p className="text-success font-bold text-xl">+5%</p>
+            <p className="text-textSecondary text-xl">vs last month</p>
           </div>
         </div>
 
-        <div className='flex flex-col justify-between items-center rounded-lg border-none px-6 py-5 gap-4 bg-secondary my-5'>
-          <div className='flex justify-start items-center gap-2'>
-            <img src={expensesLogo} className='w-7 h-8' />
-            <p className='text-textSecondary text-xl'>Total Expenses</p>
+        <div className="flex flex-col justify-between items-center rounded-lg px-6 py-5 gap-4 bg-secondary">
+          <div className="flex justify-start items-center gap-2">
+            <img src={expensesLogo} className="w-7 h-8" />
+            <p className="text-textSecondary text-xl">Total Expenses</p>
           </div>
-          <div className='flex justify-start items-center'>
-            <p className='font-bold text-3xl text-textPrimary'>{expense}
-            </p>
-          </div>
-          <div className='flex justify-start items-center gap-2'>
-            {
-              expense > 0 ? (<img src={increasingLogo} className='w-7 h-8' />) : (<img src={decreasingLogo} className='w-7 h-8' />)
-            }
-            <p className='text-success font-bold text-xl'>+3% </p>
-            <p className='text-textSecondary text-xl '>vs last month</p>
+          <p className="font-bold text-3xl text-textPrimary">{expense.toLocaleString()}</p>
+          <div className="flex items-center gap-2">
+            <img src={expense > 0 ? increasingLogo : decreasingLogo} className="w-7 h-8" />
+            <p className="text-danger font-bold text-xl">+3%</p>
+            <p className="text-textSecondary text-xl">vs last month</p>
           </div>
         </div>
 
-        <div className="col-span-2 bg-secondary flex flex-col justify-between p-3 rounded-xl">
-          <div className='flex justify-between items-center'>
-            <div className='flex flex-col justify-between items-center'>
-              <p className='text-textPrimary text-2xl font-bold'>Spending Analytics</p>
-              <p className='text-textSecondary text-md'>Monthly breakdown of expenses</p>
-            </div>
-            <div className='flex justify-evenly items-center gap-2'>
-              <button className='bg-primary px-5 py-1 text-textPrimary font-bold rounded-2xl hover:text-primary hover:bg-accent'>Week</button>
-              <button className='bg-primary px-5 py-1 text-textPrimary font-bold rounded-2xl hover:text-primary hover:bg-accent'>Month</button>
-              <button className='bg-primary px-5 py-1 text-textPrimary font-bold rounded-2xl hover:text-primary hover:bg-accent'>Year</button>
-            </div>
-          </div>
-          <div className='flex justify-between  items-center text-textMuted font-bold '>
-            <span className='hover:text-textPrimary active:text-textPrimary'>Mon</span>
-            <span className='hover:text-textPrimary active:text-textPrimary'>Tue</span>
-            <span className='hover:text-textPrimary active:text-textPrimary'>Wed</span>
-            <span className='hover:text-textPrimary active:text-textPrimary'>Thu</span>
-            <span className='hover:text-textPrimary active:text-textPrimary'>Fri</span>
-            <span className='hover:text-textPrimary active:text-textPrimary'>Sat</span>
-            <span className='hover:text-textPrimary active:text-textPrimary'>Sun</span>
-          </div>
-        </div>
+        {/* CHART */}
+        <SpendingChart transactions={transactions} categories={categories} />
 
         {/* TOP CATEGORIES */}
-
-        <div className="col-span-1 bg-secondary flex flex-col justify-start p-6 rounded-xl gap-6">
-          <div>
-            <p className='text-2xl text-textPrimary font-bold'>Top Categories</p>
-            {
-              categories.length > 0 ? categories.map(cat => (
-                <div className='flex flex-col gap-2 w-full' key={cat.name}>
-                  <div className='flex justify-between items-center w-full'>
-                    <p className='text-textSecondary'>{cat.name}</p>
-                    <p className='text-textSecondary'>{cat.percentage}%</p>
-                  </div>
-                  <div className='w-full bg-primary rounded-full h-2'>
-                    <div className={"h-2 rounded-full"} style={{
-                      width: `${cat.percentage}%`,
-                      backgroundColor: cat.color
-                    }}></div>
-                  </div>
+        <div className="col-span-1 bg-secondary flex flex-col p-6 rounded-xl gap-4">
+          <p className="text-2xl text-textPrimary font-bold">Top Categories</p>
+          {categories.length > 0 ? (
+            categories.map((cat) => (
+              <div className="flex flex-col gap-2 w-full" key={cat.id}>
+                <div className="flex justify-between items-center w-full">
+                  <p className="text-textSecondary">{cat.name}</p>
+                  <p className="text-textSecondary">{cat.percentage ?? 0}%</p>
                 </div>
-              ))
-                :
-                <h1 className='text-2xl text-info text-center'>NO CATEGORIES FOUND</h1>
-            }
-          </div>
+                <div className="w-full bg-primary rounded-full h-2">
+                  <div
+                    className="h-2 rounded-full"
+                    style={{
+                      width: `${cat.percentage ?? 0}%`,
+                      backgroundColor: cat.color,
+                    }}
+                  />
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-info text-center">No categories found</p>
+          )}
         </div>
+
       </div>
-      {/* --------------------------------------------------- */}
-      <div className='text-textPrimary flex justify-around items-center'>
-        <div className='flex items-center gap-4'>
-          <p className='text-xl font-bold'>Recent Transactions</p>
+
+      {/* RECENT TRANSACTIONS HEADER */}
+      <div className="text-textPrimary flex justify-between items-center mb-5">
+        <div className="flex items-center gap-4">
+          <p className="text-xl font-bold">Recent Transactions</p>
           <button
             onClick={() => setShowModal(true)}
-            className='flex items-center gap-2 bg-accent hover:bg-accent-soft text-primary font-bold px-4 py-2 rounded-xl transition-colors'
+            className="flex items-center gap-2 bg-accent hover:bg-accent-soft text-primary font-bold px-4 py-2 rounded-xl transition-colors"
           >
             <Plus size={18} />
             Add
           </button>
         </div>
-        <div className='flex justify-between items-center gap-4'>
-          <select className='bg-secondary px-3 py-2 rounded-xl'>
+        <div className="flex items-center gap-4">
+          <select className="bg-secondary text-textPrimary px-3 py-2 rounded-xl">
             <option value="This Month">This Month</option>
             <option value="This Week">This Week</option>
             <option value="This Year">This Year</option>
           </select>
-          <select className='bg-secondary px-3 py-2 rounded-xl'>
+          <select className="bg-secondary text-textPrimary px-3 py-2 rounded-xl">
             <option value="All categories">All categories</option>
-            <option value="Food & Dinning">Food & Dinning</option>
-            <option value="Shopping">Shopping</option>
-            <option value="Transport">Transport</option>
-            <option value="Others">Others</option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.name}>{cat.name}</option>
+            ))}
           </select>
         </div>
+      </div>
+
+      {/* RECENT TRANSACTIONS GRID */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
+        {Array.isArray(transactions) && transactions.length > 0 ? (
+          transactions.map((transaction) => {
+            const cat = categories.find((c) => c.id === transaction.categoryId);
+            const date = transaction.date?.toDate?.() || new Date(transaction.date);
+            return (
+              <div
+                key={transaction.id}
+                className="flex justify-evenly items-center bg-secondary text-textPrimary rounded-lg py-5 px-4 gap-2"
+              >
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center text-primary font-bold text-lg flex-shrink-0"
+                  style={{ backgroundColor: cat?.color ?? '#22c55e' }}
+                >
+                  {transaction.title?.charAt(0).toUpperCase()}
+                </div>
+                <div className="flex-1">
+                  <p className="font-bold mb-1">{transaction.title}</p>
+                  <p className="text-textSecondary text-sm">{cat?.name ?? 'Uncategorized'}</p>
+                </div>
+                <div className="text-right">
+                  <p className={`text-xl font-bold mb-1 ${cat?.type === 'income' ? 'text-success' : 'text-danger'}`}>
+                    {cat?.type === 'income' ? '+' : '-'}{transaction.amount.toLocaleString()}
+                  </p>
+                  <p className="text-textMuted text-sm">
+                    {date.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </p>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <p className="text-textMuted col-span-3">No transactions found</p>
+        )}
       </div>
 
       {showModal && (
@@ -180,37 +182,7 @@ export default function Dashboard() {
           onSuccess={() => window.location.reload()}
         />
       )}
-      {/* RECENT TRANSACTIONS GRID*/}
-
-      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3      lg:grid-cols-3 items-stretch
-      gap-7  mx-auto max-w-7xl my-5'>
-
-        {
-          Array.isArray(transactions) && transactions.length > 0 ? (
-            transactions.map(transaction =>
-              <div key={transaction.id} className='flex justify-evenly items-center bg-secondary text-textPrimary rounded-lg border-none py-5 px-4 h-full gap-2'>
-
-                <div >
-                  <p >{transaction.icon}</p>
-                </div>
-                <div >
-                  <p className='text-md  font-bold mb-3'>{transaction.title}</p>
-                  <p className='text-textSecondary'>{transaction.category}</p>
-                </div>
-                <div>
-                  <p className='text-xl font-bold mb-3'>{transaction.amount}</p>
-                  <p className='text-textMuted'>{transaction.date}</p>
-                </div>
-              </div>
-            )
-          )
-            :
-            (
-              <h1>No transactions found!!</h1>
-            )
-        }
-      </div>
 
     </div>
-  )
-};
+  );
+}
