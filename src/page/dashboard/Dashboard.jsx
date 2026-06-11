@@ -14,10 +14,10 @@ export default function Dashboard() {
   const { transactions, categories, loading, error } = useExpenseData();
   const [showModal, setShowModal] = useState(false);
 
-  const { income = 0, expense = 0, balance = 0, categoriesWithPercentage = [] } =
+  const { income = 0, expense = 0, balance = 0, change = 0, categoriesWithPercentage = [] } =
     transactions.length > 0 && categories.length > 0
       ? getTotals(transactions, categories)
-      : { income: 0, expense: 0, balance: 0, categoriesWithPercentage: [] };
+      : { income: 0, expense: 0, balance: 0, change: 0, categoriesWithPercentage: [] };
 
   if (loading) {
     return (
@@ -49,7 +49,9 @@ export default function Dashboard() {
           <p className="font-bold text-3xl text-textPrimary">{balance.toLocaleString()}</p>
           <div className="flex items-center gap-2">
             <img src={balance >= 0 ? increasingLogo : decreasingLogo} className="w-7 h-8" />
-            <p className="text-success font-bold text-xl">+2%</p>
+            <p className={`font-bold text-xl ${balance >= 0 ? 'text-success' : 'text-danger'}`}>
+              {balance >= 0 ? '+' : '-'}{change}%
+            </p>
             <p className="text-textSecondary text-xl">vs last month</p>
           </div>
         </div>
@@ -62,7 +64,9 @@ export default function Dashboard() {
           <p className="font-bold text-3xl text-textPrimary">{income.toLocaleString()}</p>
           <div className="flex items-center gap-2">
             <img src={income > 0 ? increasingLogo : decreasingLogo} className="w-7 h-8" />
-            <p className="text-success font-bold text-xl">+5%</p>
+            <p className={`font-bold text-xl ${income > 0 ? 'text-success' : 'text-danger'}`}>
+              {income > 0 ? '+' : '-'}{change}%
+            </p>
             <p className="text-textSecondary text-xl">vs last month</p>
           </div>
         </div>
@@ -75,7 +79,9 @@ export default function Dashboard() {
           <p className="font-bold text-3xl text-textPrimary">{expense.toLocaleString()}</p>
           <div className="flex items-center gap-2">
             <img src={expense > 0 ? increasingLogo : decreasingLogo} className="w-7 h-8" />
-            <p className="text-danger font-bold text-xl">+3%</p>
+            <p className={`font-bold text-xl ${expense > 0 ? 'text-danger' : 'text-success'}`}>
+              {expense > 0 ? '+' : '-'}{change}%
+            </p>
             <p className="text-textSecondary text-xl">vs last month</p>
           </div>
         </div>
@@ -91,13 +97,13 @@ export default function Dashboard() {
               <div className="flex flex-col gap-2 w-full" key={cat.id}>
                 <div className="flex justify-between items-center w-full">
                   <p className="text-textSecondary">{cat.name}</p>
-                  <p className="text-textSecondary">{cat.percentage ?? 0}%</p>
+                  <p className="text-textSecondary">{cat.percentage}%</p>
                 </div>
                 <div className="w-full bg-primary rounded-full h-2">
                   <div
                     className="h-2 rounded-full"
                     style={{
-                      width: `${cat.percentage ?? 0}%`,
+                      width: `${cat.percentage}%`,
                       backgroundColor: cat.color,
                     }}
                   />
@@ -105,7 +111,9 @@ export default function Dashboard() {
               </div>
             ))
           ) : (
-            <p className="text-info text-center">No categories found</p>
+            <p className="text-textMuted text-sm text-center">
+              Add some expense transactions to see your top categories
+            </p>
           )}
         </div>
 
